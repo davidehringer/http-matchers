@@ -1,0 +1,184 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.httpmatchers</groupId>
+	<artifactId>http-matchers</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>http-matchers</name>
+	<url>http://code.google.com/p/http-matchers/</url>
+
+	<inceptionYear>2011</inceptionYear>
+	<developers>
+		<developer>
+			<name>David Ehringer</name>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<keystore>${project.build.directory}/keystore/jetty-ssl.keystore
+		</keystore>
+		<keypass>http-matchers</keypass>
+		<storepass>http-matchers</storepass>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>1.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit-dep</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-generator</artifactId>
+			<version>1.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.8.1</version>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>verify</id>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>keytool-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<id>clean</id>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>generate-resources</phase>
+						<id>genkey</id>
+						<goals>
+							<goal>genkey</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<keystore>${keystore}</keystore>
+					<dname>cn=www.http-matchers.com</dname>
+					<keypass>${keypass}</keypass>
+					<storepass>${storepass}</storepass>
+					<alias>http-matchers</alias>
+					<keyalg>RSA</keyalg>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.0.0.M2</version>
+				<configuration>
+					<webAppSourceDirectory>${basedir}/src/test/resources/web-content
+					</webAppSourceDirectory>
+					<webAppXml>${basedir}/src/test/resources/jetty/jetty-config.xml</webAppXml>
+					<stopKey>stopJetty</stopKey>
+					<stopPort>8081</stopPort>
+					<connectors>
+						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+							<port>8080</port>
+						</connector>
+						<connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
+							<port>8443</port>
+							<keystore>${keystore}</keystore>
+							<password>${storepass}</password>
+							<keyPassword>${keypass}</keyPassword>
+						</connector>
+						<connector implementation="org.eclipse.jetty.server.ssl.SslSocketConnector">
+							<port>9443</port>
+							<keystore>${keystore}</keystore>
+							<password>${storepass}</password>
+							<keyPassword>${keypass}</keyPassword>
+						</connector>
+					</connectors>
+					<userRealms>
+						<userRealm implementation="org.eclipse.jetty.security.HashUserRealm">
+							<name>Test Realm</name>
+							<config>etc/realm.properties</config>
+						</userRealm>
+					</userRealms>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-jetty</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<scanIntervalSeconds>0</scanIntervalSeconds>
+							<daemon>true</daemon>
+						</configuration>
+					</execution>
+					<execution>
+						<id>stop-jetty</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
