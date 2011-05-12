@@ -122,6 +122,7 @@
 					<storepass>${storepass}</storepass>
 					<alias>http-matchers</alias>
 					<keyalg>RSA</keyalg>
+					<validity>30</validity>
 				</configuration>
 			</plugin>
 			<plugin>
