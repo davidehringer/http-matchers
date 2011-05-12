@@ -98,7 +98,7 @@ public class UrlIsAccessbileMatcher extends TypeSafeDiagnosingMatcher<String> {
 
 		SSLSocketFactory socketFactory = new SSLSocketFactory(sslContext,
 				new AllowAllHostnameVerifier());
-		Scheme httpsScheme = new Scheme("https", 8443, socketFactory);
+		Scheme httpsScheme = new Scheme("https", 443, socketFactory);
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
 		schemeRegistry.register(httpsScheme);
 
