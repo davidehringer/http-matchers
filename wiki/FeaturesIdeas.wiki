@@ -1,0 +1,10 @@
+#summary Feature Ideas
+
+= Feature Ideas =
+
+ * Certs
+    * expiration dates
+    * SSL used
+ * Auth required
+ * alternative HTTP verbs
+ * response body/header/code matching
