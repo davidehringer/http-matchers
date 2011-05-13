@@ -18,8 +18,8 @@ package org.httpmatchers.security;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-import org.httpmatchers.BaseHttpMatcher;
 import org.httpmatchers.access.UrlIsAccessible;
+import org.httpmatchers.internal.BaseHttpMatcher;
 
 /**
  * @author David Ehringer

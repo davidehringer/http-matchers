@@ -19,7 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-import org.httpmatchers.BaseHttpMatcher;
+import org.httpmatchers.internal.BaseHttpMatcher;
 import org.httpmatchers.internal.security.SslSpyingDefaultHttpClient;
 
 /**
