@@ -19,17 +19,17 @@ import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.httpmatchers.BaseHttpMatcher;
-import org.httpmatchers.access.UrlIsAccessbileMatcher;
+import org.httpmatchers.access.UrlIsAccessible;
 
 /**
  * @author David Ehringer
  */
-public class CredentialAreAuthorizedMatcher extends
+public class CredentialAreAuthorized extends
 		BaseHttpMatcher<Credentials> {
 
 	private final String url;
 
-	public CredentialAreAuthorizedMatcher(String url) {
+	public CredentialAreAuthorized(String url) {
 		this.url = url;
 	}
 
@@ -40,7 +40,7 @@ public class CredentialAreAuthorizedMatcher extends
 	@Override
 	protected boolean matchesSafely(Credentials credentials,
 			Description mismatchDescription) {
-		if (UrlIsAccessbileMatcher.isAccessible(credentials).matches(url)) {
+		if (UrlIsAccessible.isAccessible(credentials).matches(url)) {
 			return true;
 		}
 		mismatchDescription.appendText(credentials + " are not authorized");
@@ -49,6 +49,6 @@ public class CredentialAreAuthorizedMatcher extends
 
 	@Factory
 	public static Matcher<Credentials> areAuthorizedFor(String url) {
-		return new CredentialAreAuthorizedMatcher(url);
+		return new CredentialAreAuthorized(url);
 	}
 }

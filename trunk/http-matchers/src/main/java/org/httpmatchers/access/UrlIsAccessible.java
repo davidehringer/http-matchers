@@ -13,46 +13,65 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.httpmatchers.security;
+package org.httpmatchers.access;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.httpmatchers.BaseHttpMatcher;
-import org.httpmatchers.internal.security.SslSpyingDefaultHttpClient;
+import org.httpmatchers.security.Credentials;
 
 /**
  * @author David Ehringer
  */
-public class RequiresSslMatcher extends BaseHttpMatcher<String> {
+public class UrlIsAccessible extends BaseHttpMatcher<String> {
+
+	public UrlIsAccessible() {
+		super();
+	}
+
+	public UrlIsAccessible(Credentials credentials) {
+		super(credentials);
+	}
 
 	public void describeTo(Description description) {
-		description.appendText("a URL that requires SSL");
+		description
+				.appendText("to be able to access the URL using an HTTP GET");
 	}
 
 	@Override
 	protected boolean matchesSafely(String url, Description mismatchDescription) {
 		try {
-			SslSpyingDefaultHttpClient httpClient = SslSpyingDefaultHttpClient
-					.createSslAwareHttpClient();
+			HttpClient httpclient = createHttpClient(url);
 			HttpGet get = new HttpGet(url);
-			httpClient.execute(get);
-			if (httpClient.getTrustManager().checkForTrustedCertHasOccured()) {
-				return true;
-			}
-
-			mismatchDescription
-					.appendText("no check for a trusted certificate occured");
-			return false;
+			HttpResponse response = httpclient.execute(get);
+			return verifyStatusCode(mismatchDescription, response);
 		} catch (Exception e) {
 			appendMismatchExceptionDescription(url, mismatchDescription, e);
 			return false;
 		}
 	}
 
+	private boolean verifyStatusCode(Description mismatchDescription,
+			HttpResponse response) {
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (200 == statusCode) {
+			return true;
+		}
+		mismatchDescription.appendText("HTTP status code was " + statusCode);
+		return false;
+	}
+
 	@Factory
-	public static Matcher<String> requiresSsl() {
-		return new RequiresSslMatcher();
+	public static Matcher<String> isAccessible() {
+		return new UrlIsAccessible();
+	}
+
+	@Factory
+	public static Matcher<String> isAccessible(Credentials credentials) {
+		return new UrlIsAccessible(credentials);
 	}
 }

@@ -14,41 +14,38 @@
  * limitations under the License.
  */
 package org.httpmatchers.security;
-
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
-import static org.httpmatchers.Urls.HTTP_URL;
 import static org.httpmatchers.Urls.HTTPS_URL;
-import static org.httpmatchers.Urls.HTTPS_WITH_BASIC_AUTH_URL;
-import static org.httpmatchers.Urls.HTTP_WITH_BASIC_AUTH_URL;
-import static org.httpmatchers.security.RequiresBasicAuthMatcher.requiresBasicAuthentication;
+import static org.httpmatchers.security.CertificateExpiration.hasCertificateExpiringInDays;
 
 import org.junit.Test;
 
 /**
  * @author David Ehringer
  */
-public class RequiresBasicAuthMatcherIT {
+public class CertificateExpirationIT {
 
 	@Test
-	public void basicAuthenticationCanBeRequired() {
-		assertThat(HTTP_WITH_BASIC_AUTH_URL,
-				requiresBasicAuthentication());
+	public void certificateExpiresLaterThan(){
+		assertThat(HTTPS_URL, hasCertificateExpiringInDays(greaterThan(5)));
+	}
+	
+	@Test
+	public void certificateExpiresNoSoonerThan(){
+		assertThat(HTTPS_URL, hasCertificateExpiringInDays(not(lessThan(29))));
 	}
 
 	@Test
-	public void basicAuthenticationDoesNotHaveToBeRequired() {
-		assertThat(HTTP_URL, not(requiresBasicAuthentication()));
+	public void aCertificateNotMeetingTheExpirationCriteria(){
+		assertThat(HTTPS_URL, not(hasCertificateExpiringInDays(greaterThan(30))));
 	}
 
 	@Test
-	public void basicAuthenticationCanBeRequiredWhenUsingSsl() {
-		assertThat(HTTPS_WITH_BASIC_AUTH_URL,
-				requiresBasicAuthentication());
-	}
-
-	@Test
-	public void basicAuthenticationDoesNotHaveToBeRequiredWhenUsingSsl() {
-		assertThat(HTTPS_URL, not(requiresBasicAuthentication()));
+	public void certificateExpiringOnDate(){
+		assertThat(HTTPS_URL, hasCertificateExpiringInDays(equalTo(29)));
 	}
 }

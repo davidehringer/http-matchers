@@ -21,7 +21,7 @@ import static org.httpmatchers.Urls.HTTP_URL;
 import static org.httpmatchers.Urls.HTTPS_URL;
 import static org.httpmatchers.Urls.HTTPS_2_URL;
 import static org.httpmatchers.Urls.HTTPS_WITH_BASIC_AUTH_URL;
-import static org.httpmatchers.access.UrlIsAccessbileMatcher.isAccessible;
+import static org.httpmatchers.access.UrlIsAccessible.isAccessible;
 
 import org.httpmatchers.security.Credentials;
 import org.junit.Test;
@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * @author David Ehringer
  */
-public class UrlAccessibleMatcherIT {
+public class UrlIsAccessibleIT {
 
 	@Test
 	public void anUrlCanBeAccessedUsingGet() {

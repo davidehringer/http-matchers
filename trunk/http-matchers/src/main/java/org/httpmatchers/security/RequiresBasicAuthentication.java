@@ -27,13 +27,13 @@ import org.httpmatchers.BaseHttpMatcher;
 /**
  * @author David Ehringer
  */
-public class RequiresBasicAuthMatcher extends BaseHttpMatcher<String> {
+public class RequiresBasicAuthentication extends BaseHttpMatcher<String> {
 
-	public RequiresBasicAuthMatcher() {
+	public RequiresBasicAuthentication() {
 		super();
 	}
 
-	public RequiresBasicAuthMatcher(Credentials credentials) {
+	public RequiresBasicAuthentication(Credentials credentials) {
 		super(credentials);
 	}
 
@@ -85,6 +85,6 @@ public class RequiresBasicAuthMatcher extends BaseHttpMatcher<String> {
 
 	@Factory
 	public static Matcher<String> requiresBasicAuthentication() {
-		return new RequiresBasicAuthMatcher();
+		return new RequiresBasicAuthentication();
 	}
 }

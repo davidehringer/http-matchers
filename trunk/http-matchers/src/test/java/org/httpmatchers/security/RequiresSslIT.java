@@ -17,14 +17,14 @@ package org.httpmatchers.security;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.not;
-import static org.httpmatchers.security.RequiresSslMatcher.requiresSsl;
+import static org.httpmatchers.security.RequiresSsl.requiresSsl;
 import static org.httpmatchers.Urls.*;
 import org.junit.Test;
 
 /**
  * @author David Ehringer
  */
-public class RequiresSslMatcherIT {
+public class RequiresSslIT {
 
 	@Test
 	public void sslCanBeRequired(){

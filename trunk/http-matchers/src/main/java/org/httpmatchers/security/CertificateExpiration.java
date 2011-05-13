@@ -28,11 +28,11 @@ import org.httpmatchers.internal.security.SslSpyingDefaultHttpClient;
 /**
  * @author David Ehringer
  */
-public class CertificateExpirationMatcher extends BaseHttpMatcher<String> {
+public class CertificateExpiration extends BaseHttpMatcher<String> {
 
 	public final Matcher<? super Integer> daysMatcher;
 
-	public CertificateExpirationMatcher(Matcher<? super Integer> daysMatcher) {
+	public CertificateExpiration(Matcher<? super Integer> daysMatcher) {
 		super();
 		this.daysMatcher = daysMatcher;
 	}
@@ -81,6 +81,6 @@ public class CertificateExpirationMatcher extends BaseHttpMatcher<String> {
 	@Factory
 	public static Matcher<String> hasCertificateExpiringInDays(
 			Matcher<? super Integer> daysMatcher) {
-		return new CertificateExpirationMatcher(daysMatcher);
+		return new CertificateExpiration(daysMatcher);
 	}
 }
