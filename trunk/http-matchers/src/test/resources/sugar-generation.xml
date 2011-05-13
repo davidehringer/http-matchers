@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<matchers>
+
+  <factory class="org.httpmatchers.access.UrlIsAccessible"/>
+  
+  <factory class="org.httpmatchers.security.CertificateExpiration"/>
+  <factory class="org.httpmatchers.security.CredentialsAreAuthorized"/>
+  <factory class="org.httpmatchers.security.RequiresBasicAuthentication"/>
+  <factory class="org.httpmatchers.security.RequiresSsl"/>
+
+</matchers>
