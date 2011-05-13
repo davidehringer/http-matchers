@@ -22,7 +22,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-import org.httpmatchers.access.BaseHttpMatcher;
+import org.httpmatchers.BaseHttpMatcher;
 
 /**
  * @author David Ehringer
