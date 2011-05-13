@@ -24,12 +24,12 @@ import org.httpmatchers.access.UrlIsAccessible;
 /**
  * @author David Ehringer
  */
-public class CredentialAreAuthorized extends
+public class CredentialsAreAuthorized extends
 		BaseHttpMatcher<Credentials> {
 
 	private final String url;
 
-	public CredentialAreAuthorized(String url) {
+	public CredentialsAreAuthorized(String url) {
 		this.url = url;
 	}
 
@@ -49,6 +49,6 @@ public class CredentialAreAuthorized extends
 
 	@Factory
 	public static Matcher<Credentials> areAuthorizedFor(String url) {
-		return new CredentialAreAuthorized(url);
+		return new CredentialsAreAuthorized(url);
 	}
 }

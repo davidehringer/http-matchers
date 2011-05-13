@@ -19,12 +19,12 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.not;
 import static org.httpmatchers.Urls.*;
-import static org.httpmatchers.security.CredentialAreAuthorized.areAuthorizedFor;
+import static org.httpmatchers.security.CredentialsAreAuthorized.areAuthorizedFor;
 
 /**
  * @author David Ehringer
  */
-public class CredentialAreAuthorizedIT {
+public class CredentialsAreAuthorizedIT {
 
 	@Test
 	public void credentialsAreAuthorizedForUrlRequiringBasicAuth() {
