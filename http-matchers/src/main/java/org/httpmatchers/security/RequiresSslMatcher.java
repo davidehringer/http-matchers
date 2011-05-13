@@ -20,7 +20,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.httpmatchers.BaseHttpMatcher;
-import org.httpmatchers.SslSpyingDefaultHttpClient;
+import org.httpmatchers.internal.security.SslSpyingDefaultHttpClient;
 
 /**
  * @author David Ehringer

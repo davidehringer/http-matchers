@@ -34,8 +34,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.httpmatchers.internal.security.SpyingAllowAllTrustManager;
+import org.httpmatchers.internal.security.SslSpyingDefaultHttpClient;
 import org.httpmatchers.security.Credentials;
-import org.httpmatchers.security.SpyingAllowAllTrustManager;
 
 /**
  * @author David Ehringer
