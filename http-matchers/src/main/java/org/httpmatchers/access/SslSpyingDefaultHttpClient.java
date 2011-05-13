@@ -22,9 +22,6 @@ import java.security.SecureRandom;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -32,47 +29,30 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.httpmatchers.security.Credentials;
 import org.httpmatchers.security.SpyingAllowAllTrustManager;
 
 /**
  * @author David Ehringer
  */
-public abstract class BaseHttpMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
+public class SslSpyingDefaultHttpClient extends DefaultHttpClient {
 
-	private final Credentials credentials;
+	private final SpyingAllowAllTrustManager trustManager;
 
-	public BaseHttpMatcher() {
-		this.credentials = null;
+	private SslSpyingDefaultHttpClient(ClientConnectionManager conman,
+			SpyingAllowAllTrustManager trustManager) {
+		super(conman);
+		this.trustManager = trustManager;
 	}
 
-	public BaseHttpMatcher(Credentials credentials) {
-		this.credentials = credentials;
+	public SpyingAllowAllTrustManager getTrustManager() {
+		return trustManager;
 	}
 
-	protected HttpClient createHttpClient(String url)
+	public static SslSpyingDefaultHttpClient createSslAwareHttpClient()
 			throws NoSuchAlgorithmException, KeyManagementException {
-		DefaultHttpClient httpClient;
-		if (isSsl(url)) {
-			httpClient = SslSpyingDefaultHttpClient.createSslAwareHttpClient();
-		} else {
-			httpClient = new DefaultHttpClient();
-		}
-		handleCredentials(httpClient);
-		return httpClient;
-	}
-
-	protected boolean isSsl(String url) {
-		return url.trim().toLowerCase().startsWith("https");
-	}
-
-	protected DefaultHttpClient createSslAwareHttpClient()
-			throws NoSuchAlgorithmException, KeyManagementException {
+		SpyingAllowAllTrustManager trustManager = new SpyingAllowAllTrustManager();
 		SSLContext sslContext = SSLContext.getInstance("SSL");
-		sslContext.init(null,
-				new TrustManager[] { new SpyingAllowAllTrustManager() },
+		sslContext.init(null, new TrustManager[] { trustManager },
 				new SecureRandom());
 
 		SSLSocketFactory socketFactory = new SSLSocketFactory(sslContext,
@@ -83,21 +63,8 @@ public abstract class BaseHttpMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
 
 		ClientConnectionManager cm = new SingleClientConnManager(schemeRegistry);
 
-		return new DefaultHttpClient(cm);
-	}
-
-	protected void handleCredentials(DefaultHttpClient httpClient) {
-		if (credentials != null) {
-			httpClient.getCredentialsProvider().setCredentials(
-					new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
-					new UsernamePasswordCredentials(credentials.getUsername(),
-							credentials.getPassword()));
-		}
-	}
-	
-	protected void appendMismatchExceptionDescription(String url,
-			Description mismatchDescription, Exception e) {
-		mismatchDescription.appendText(url + " cannot be accessed due to \""
-				+ e.getMessage() + "\" (" + e + ")");
+		SslSpyingDefaultHttpClient httpClient = new SslSpyingDefaultHttpClient(
+				cm, trustManager);
+		return httpClient;
 	}
 }
