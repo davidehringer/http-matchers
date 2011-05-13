@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.httpmatchers.access;
+package org.httpmatchers.security;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
-import org.httpmatchers.security.Credentials;
+import org.httpmatchers.access.BaseHttpMatcher;
 
 /**
  * @author David Ehringer
  */
-public class UrlIsAccessbileMatcher extends BaseHttpMatcher<String> {
+public class RequiresBasicAuthMatcher extends BaseHttpMatcher<String> {
 
-	public UrlIsAccessbileMatcher() {
+	public RequiresBasicAuthMatcher() {
 		super();
 	}
 
-	public UrlIsAccessbileMatcher(Credentials credentials) {
+	public RequiresBasicAuthMatcher(Credentials credentials) {
 		super(credentials);
 	}
 
 	public void describeTo(Description description) {
-		description
-				.appendText("to be able to access the URL using an HTTP GET");
+		description.appendText("a URL that requires Basic Authentication");
 	}
 
 	@Override
@@ -46,21 +46,32 @@ public class UrlIsAccessbileMatcher extends BaseHttpMatcher<String> {
 		try {
 			HttpClient httpclient = createHttpClient(url);
 			HttpGet get = new HttpGet(url);
-			HttpResponse response = httpclient.execute(get);
-			return verifyStatusCode(mismatchDescription, response);
+			HttpResponse response = null;
+			response = httpclient.execute(get);
+			if (isUnauthorized(response)
+					&& receivedBasicAuthChallenge(response)) {
+				return true;
+			}
+
+			appendMismatchDescription(mismatchDescription, response);
+			return false;
 		} catch (Exception e) {
 			appendMismatchExceptionDescription(url, mismatchDescription, e);
 			return false;
 		}
 	}
 
-	private boolean verifyStatusCode(Description mismatchDescription,
-			HttpResponse response) {
-		int statusCode = response.getStatusLine().getStatusCode();
-		if (200 == statusCode) {
-			return true;
+	private boolean isUnauthorized(HttpResponse response) {
+		return 401 == response.getStatusLine().getStatusCode();
+	}
+
+	private boolean receivedBasicAuthChallenge(HttpResponse response) {
+		for (Header header : response.getAllHeaders()) {
+			if ("WWW-Authenticate".equalsIgnoreCase(header.getName().trim())
+					&& header.getValue().startsWith("basic")) {
+				return true;
+			}
 		}
-		mismatchDescription.appendText("HTTP status code was " + statusCode);
 		return false;
 	}
 
@@ -70,13 +81,16 @@ public class UrlIsAccessbileMatcher extends BaseHttpMatcher<String> {
 				+ e.getMessage() + "\" (" + e + ")");
 	}
 
-	@Factory
-	public static Matcher<String> isAccessible() {
-		return new UrlIsAccessbileMatcher();
+	private void appendMismatchDescription(Description mismatchDescription,
+			HttpResponse response) {
+		int responseCode = response.getStatusLine().getStatusCode();
+		mismatchDescription.appendText("received HTTP response status code "
+				+ responseCode
+				+ " (expected a 401 and a \"WWW-Authenticate: basic\" header)");
 	}
 
 	@Factory
-	public static Matcher<String> isAccessible(Credentials credentials) {
-		return new UrlIsAccessbileMatcher(credentials);
+	public static Matcher<String> requiresBasicAuthentication() {
+		return new RequiresBasicAuthMatcher();
 	}
 }

@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.httpmatchers.access;
+package org.httpmatchers;
 
 /**
  * @author David Ehringer
  */
-public class Credentials {
+public abstract class Urls {
 
-	private final String username;
-	private final String password;
+	public static final String HTTP_WITH_BASIC_AUTH_URL = "http://localhost:8080/secure";
+	public static final String HTTP_URL = "http://localhost:8080";
 
-	public Credentials(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
+	public static final String HTTPS_URL = "https://localhost:8443";
+	public static final String HTTPS_2_URL = "https://localhost:8443";
+	public static final String HTTPS_WITH_BASIC_AUTH_URL = "https://localhost:8443/secure";
 }

@@ -17,8 +17,13 @@ package org.httpmatchers.access;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
+import static org.httpmatchers.Urls.HTTP_URL;
+import static org.httpmatchers.Urls.HTTPS_URL;
+import static org.httpmatchers.Urls.HTTPS_2_URL;
+import static org.httpmatchers.Urls.HTTPS_WITH_BASIC_AUTH_URL;
 import static org.httpmatchers.access.UrlIsAccessbileMatcher.isAccessible;
 
+import org.httpmatchers.security.Credentials;
 import org.junit.Test;
 
 /**
@@ -28,17 +33,17 @@ public class UrlAccessibleMatcherIT {
 
 	@Test
 	public void anUrlCanBeAccessedUsingGet() {
-		assertThat("http://localhost:8080", isAccessible());
+		assertThat(HTTP_URL, isAccessible());
 	}
 
 	@Test
 	public void anSslUrlCanBeAccessedUsingGet() {
-		assertThat("https://localhost:8443/", isAccessible());
+		assertThat(HTTPS_URL, isAccessible());
 	}
 
 	@Test
 	public void anyPortCanBeUsedForAnSslUrl() {
-		assertThat("https://localhost:9443/", isAccessible());
+		assertThat(HTTPS_2_URL, isAccessible());
 	}
 
 	@Test
@@ -51,11 +56,11 @@ public class UrlAccessibleMatcherIT {
 	@Test
 	public void credentialsCanBeProvidedToAccessPagesRequiringAuthentication(){
 		Credentials credentials = new Credentials("admin", "secret");
-		assertThat("https://localhost:8443/secure", isAccessible(credentials));
+		assertThat(HTTPS_WITH_BASIC_AUTH_URL, isAccessible(credentials));
 	}
 	
 	@Test
 	public void http401StatusCodesAreHandledWhenCredentialsAreNotProvided(){
-		assertThat("https://localhost:8443/secure", not(isAccessible()));
+		assertThat(HTTPS_WITH_BASIC_AUTH_URL, not(isAccessible()));
 	}
 }
