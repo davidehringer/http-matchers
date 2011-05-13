@@ -27,6 +27,7 @@ import javax.net.ssl.X509TrustManager;
 public class SpyingAllowAllTrustManager implements X509TrustManager {
 	
 	private boolean checkForTrustedCertOccured = false;
+	private Date certValidUntil;
 
 	public void checkClientTrusted(X509Certificate[] certificates,
 			String authType) throws CertificateException {
@@ -36,10 +37,10 @@ public class SpyingAllowAllTrustManager implements X509TrustManager {
 	public void checkServerTrusted(X509Certificate[] certificates,
 			String authType) throws CertificateException {
 		checkForTrustedCertOccured = true;
+		// TODO how to handle multiple certs?
 		for (X509Certificate cert : certificates) {
-			System.out.println(cert);
-			Date validUntil = cert.getNotAfter();
-			System.out.println(validUntil);
+			System.out.println("Certificate: " + cert);
+			certValidUntil = cert.getNotAfter();
 		}
 	}
 
@@ -49,5 +50,9 @@ public class SpyingAllowAllTrustManager implements X509TrustManager {
 
 	public boolean checkForTrustedCertHasOccured() {
 		return checkForTrustedCertOccured;
+	}
+
+	public Date getCheckCertValidUntilDate() {
+		return certValidUntil;
 	}
 }
