@@ -33,7 +33,7 @@ public class Credentials {
 	}
 
 	public String getPassword() {
-		return maskPassword();
+		return password;
 	}
 
 	@Override
