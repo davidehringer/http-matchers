@@ -33,6 +33,21 @@ public class Credentials {
 	}
 
 	public String getPassword() {
-		return password;
+		return maskPassword();
+	}
+
+	@Override
+	public String toString() {
+		return "Credentials [username=" + username + ", password="
+				+ maskPassword() + "]";
+	}
+
+	private String maskPassword() {
+		StringBuilder mask = new StringBuilder();
+		for (@SuppressWarnings("unused")
+		byte b : password.getBytes()) {
+			mask.append('*');
+		}
+		return mask.toString();
 	}
 }
