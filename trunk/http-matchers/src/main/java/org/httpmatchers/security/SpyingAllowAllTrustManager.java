@@ -25,13 +25,17 @@ import javax.net.ssl.X509TrustManager;
  * @author David Ehringer
  */
 public class SpyingAllowAllTrustManager implements X509TrustManager {
+	
+	private boolean checkForTrustedCertOccured = false;
 
 	public void checkClientTrusted(X509Certificate[] certificates,
 			String authType) throws CertificateException {
+		checkForTrustedCertOccured = true;
 	}
 
 	public void checkServerTrusted(X509Certificate[] certificates,
 			String authType) throws CertificateException {
+		checkForTrustedCertOccured = true;
 		for (X509Certificate cert : certificates) {
 			System.out.println(cert);
 			Date validUntil = cert.getNotAfter();
@@ -41,5 +45,9 @@ public class SpyingAllowAllTrustManager implements X509TrustManager {
 
 	public X509Certificate[] getAcceptedIssuers() {
 		return new X509Certificate[0];
+	}
+
+	public boolean checkForTrustedCertHasOccured() {
+		return checkForTrustedCertOccured;
 	}
 }

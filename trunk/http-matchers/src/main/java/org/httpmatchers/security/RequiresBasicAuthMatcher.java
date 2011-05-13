@@ -75,12 +75,6 @@ public class RequiresBasicAuthMatcher extends BaseHttpMatcher<String> {
 		return false;
 	}
 
-	private void appendMismatchExceptionDescription(String url,
-			Description mismatchDescription, Exception e) {
-		mismatchDescription.appendText(url + " cannot be accessed due to \""
-				+ e.getMessage() + "\" (" + e + ")");
-	}
-
 	private void appendMismatchDescription(Description mismatchDescription,
 			HttpResponse response) {
 		int responseCode = response.getStatusLine().getStatusCode();

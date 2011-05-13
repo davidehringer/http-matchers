@@ -64,12 +64,6 @@ public class UrlIsAccessbileMatcher extends BaseHttpMatcher<String> {
 		return false;
 	}
 
-	private void appendMismatchExceptionDescription(String url,
-			Description mismatchDescription, Exception e) {
-		mismatchDescription.appendText(url + " cannot be accessed due to \""
-				+ e.getMessage() + "\" (" + e + ")");
-	}
-
 	@Factory
 	public static Matcher<String> isAccessible() {
 		return new UrlIsAccessbileMatcher();
