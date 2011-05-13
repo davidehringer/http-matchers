@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.httpmatchers.access;
+package org.httpmatchers.security;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -24,7 +24,7 @@ import javax.net.ssl.X509TrustManager;
 /**
  * @author David Ehringer
  */
-class SpyingAllowAllTrustManager implements X509TrustManager {
+public class SpyingAllowAllTrustManager implements X509TrustManager {
 
 	public void checkClientTrusted(X509Certificate[] certificates,
 			String authType) throws CertificateException {
