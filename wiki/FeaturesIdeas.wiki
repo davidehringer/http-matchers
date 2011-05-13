@@ -3,8 +3,6 @@
 = Feature Ideas =
 
  * Certs
-    * expiration dates
-    * SSL used
- * Auth required
+    * hostname checking
  * alternative HTTP verbs
  * response body/header/code matching
