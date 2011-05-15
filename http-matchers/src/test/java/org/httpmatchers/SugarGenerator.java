@@ -30,6 +30,12 @@ public class SugarGenerator {
 						"src/main/java/",//
 						"org.httpmatchers.HttpMatchers",//
 						"src/main/java" });
+
+		XmlConfigurator.main(new String[] { //
+				"src/test/resources/specification-sugar-generation.xml",//
+						"src/main/java/",//
+						"org.httpmatchers.Specifications",//
+						"src/main/java" });
 	}
 
 }
