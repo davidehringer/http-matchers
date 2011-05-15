@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<matchers>
+  
+  <factory class="org.httpmatchers.specification.AdheresTo"/>
+  <factory class="org.httpmatchers.specification.Specification"/>
+
+</matchers>
