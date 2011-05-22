@@ -19,11 +19,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.httpmatchers.Urls.HTTPS_WITH_BASIC_AUTH_URL;
 import static org.httpmatchers.Urls.HTTP_URL;
+import static org.httpmatchers.security.CanBeAccessedUsingCredentials.canBeAccessedUsing;
 import static org.httpmatchers.security.RequiresBasicAuthentication.requiresBasicAuthentication;
 import static org.httpmatchers.security.RequiresSsl.requiresSsl;
 import static org.httpmatchers.specification.AdheresTo.adheresTo;
 import static org.httpmatchers.specification.Specification.specification;
 
+import org.httpmatchers.security.Credentials;
 import org.junit.Test;
 
 /**
@@ -34,14 +36,20 @@ public class AdheresToIT {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void urlAdheresToSpecification() {
-		Specification<String> specification = //
-		specification(//
+
+		Credentials adminCredentials = new Credentials("admin", "secret");
+		Credentials guestCredentials = new Credentials("guest", "password");
+
+		Specification<String> specification = 
+			specification(
 				requiresBasicAuthentication(), //
-				requiresSsl());
+				requiresSsl(), //
+				canBeAccessedUsing(adminCredentials),//
+				not(canBeAccessedUsing(guestCredentials)));
 
 		assertThat(HTTPS_WITH_BASIC_AUTH_URL, adheresTo(specification));
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void urlDoesNotAdhereToSpecification() {
